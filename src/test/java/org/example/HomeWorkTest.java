@@ -2,13 +2,6 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HomeWorkTest {
@@ -16,35 +9,50 @@ class HomeWorkTest {
     HomeWork homeWork = new HomeWork();
 
     @Test
-    void managerFabric() {
+    void checkTaskExampleEncode() {
+        String phrase = "hello world";
+        MorseTranslator morseTranslator = homeWork.morseTranslator();
+        String res = morseTranslator.encode(phrase);
+        assertEquals(".... . .-.. .-.. --- / .-- --- .-. .-.. -..", res);
     }
 
     @Test
-    void check() {
-        List<Integer> expectedQueue = generateQueue(1, 4);
-        List<String> pairs = generatePairs(expectedQueue);
-        assertEquals(expectedQueue, homeWork.check(pairs));
+    void checkCommonPhraseEncode() {
+        String phrase = "I love you";
+        MorseTranslator morseTranslator = homeWork.morseTranslator();
+        String res = morseTranslator.encode(phrase);
+        assertEquals(".. / .-.. --- ...- . / -.-- --- ..-", res);
     }
 
-    private List<String> generatePairs(List<Integer> expectedQueue) {
-        List<String> pairs = new ArrayList<>();
-        Function<Integer, Integer> map = (x) -> (x < 0 || x >= expectedQueue.size()) ? 0 : expectedQueue.get(x);
-
-        for (int i = 0;
-             i < expectedQueue.size(); i++) {
-            pairs.add(String.format("%d:%d", map.apply(i - 1), map.apply(i + 1)));
-        }
-        Collections.shuffle(pairs);
-        return pairs;
+    @Test
+    void checkCommaEncode() {
+        String phrase = "I, you";
+        MorseTranslator morseTranslator = homeWork.morseTranslator();
+        String res = morseTranslator.encode(phrase);
+        assertEquals(".. --..-- / -.-- --- ..-", res);
     }
 
-    private List<Integer> generateQueue(int seed, int length) {
-        return new Random(seed)
-                .ints(1, length * 100)
-                .limit(length)
-                .boxed()
-                .collect(Collectors.toList());
+    @Test
+    void checkTaskExampleDecode() {
+        String phrase = ".... . .-.. .-.. --- / .-- --- .-. .-.. -..";
+        MorseTranslator morseTranslator = homeWork.morseTranslator();
+        String res = morseTranslator.decode(phrase);
+        assertEquals("HELLO WORLD", res);
     }
 
+    @Test
+    void checkCommonPhraseDecode() {
+        String phrase = ".. / .-.. --- ...- . / -.-- --- ..-";
+        MorseTranslator morseTranslator = homeWork.morseTranslator();
+        String res = morseTranslator.decode(phrase);
+        assertEquals("I LOVE YOU", res);
+    }
 
+    @Test
+    void checkCommaDecode() {
+        String phrase = ".. --..-- / -.-- --- ..-";
+        MorseTranslator morseTranslator = homeWork.morseTranslator();
+        String res = morseTranslator.decode(phrase);
+        assertEquals("I, YOU", res);
+    }
 }
